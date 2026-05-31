@@ -18,14 +18,17 @@ from backend.models import (
     ChatRequest, HealthResponse, JobStatus,
     TokenResponse, VideoProcessRequest,
 )
-from backend.worker import celery_app, process_video_task
 
 settings = get_settings()
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    await ensure_indexes()
+    # Non-blocking startup — don't crash if DB/Redis is slow to connect
+    try:
+        await ensure_indexes()
+    except Exception as e:
+        print(f"[startup] Index creation skipped: {e}")
     yield
 
 
@@ -135,6 +138,8 @@ async def process_video(
         "video_id": None,
         "created_at": datetime.utcnow(),
     })
+    # Lazy import to avoid slow startup
+    from backend.worker import process_video_task
     process_video_task.delay(job_id, req.url, req.language, user["_id"] if user else None)
     return {"job_id": job_id}
 
