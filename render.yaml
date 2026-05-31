@@ -1,0 +1,68 @@
+services:
+  # ── Backend API ─────────────────────────────────────────────────────────────
+  - type: web
+    name: videomind-api
+    runtime: python
+    buildCommand: chmod +x build.sh && ./build.sh
+    startCommand: uvicorn backend.main:app --host 0.0.0.0 --port $PORT
+    plan: free
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: MISTRAL_API_KEY
+        sync: false
+      - key: MISTRAL_MODEL
+        value: mistral-small-latest
+      - key: WHISPER_MODEL
+        value: base
+      - key: SARVAM_API_KEY
+        sync: false
+      - key: SARVAM_STT_MODEL
+        value: saaras:v2.5
+      - key: MONGODB_URI
+        sync: false
+      - key: MONGODB_DB
+        value: videomind
+      - key: REDIS_URL
+        sync: false
+      - key: SECRET_KEY
+        generateValue: true
+      - key: JWT_SECRET
+        generateValue: true
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+
+  # ── Celery Worker ────────────────────────────────────────────────────────────
+  - type: worker
+    name: videomind-worker
+    runtime: python
+    buildCommand: chmod +x build.sh && ./build.sh
+    startCommand: celery -A backend.worker.celery_app worker --loglevel=info --pool=solo --concurrency=1
+    plan: free
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: MISTRAL_API_KEY
+        sync: false
+      - key: MISTRAL_MODEL
+        value: mistral-small-latest
+      - key: WHISPER_MODEL
+        value: base
+      - key: SARVAM_API_KEY
+        sync: false
+      - key: SARVAM_STT_MODEL
+        value: saaras:v2.5
+      - key: MONGODB_URI
+        sync: false
+      - key: MONGODB_DB
+        value: videomind
+      - key: REDIS_URL
+        sync: false
+      - key: SECRET_KEY
+        generateValue: true
+      - key: JWT_SECRET
+        generateValue: true
