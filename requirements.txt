@@ -2,11 +2,10 @@
 yt-dlp==2024.4.9
 pydub==0.25.1
 ffmpeg-python==0.2.0
-audioop-lts==0.2.2
+audioop-lts==0.2.2; python_version >= "3.13"
 
 # ── Transcription ─────────────────────────────────────────────────────────────
-openai-whisper==20231117
-setuptools
+faster-whisper
 
 # ── Translation ───────────────────────────────────────────────────────────────
 requests>=2.31.0
@@ -24,18 +23,18 @@ sentence-transformers
 huggingface-hub
 
 # ── FastAPI backend ───────────────────────────────────────────────────────────
-fastapi==0.115.5
-uvicorn[standard]==0.32.1
-motor==3.6.0
-redis[asyncio]==5.2.1
-celery[redis]==5.4.0
-python-jose[cryptography]==3.3.0
-httpx==0.28.1
-pydantic-settings==2.7.0
+fastapi
+uvicorn[standard]
+motor
+redis[asyncio]
+celery[redis]
+python-jose[cryptography]
+httpx
+pydantic-settings
 
 # ── PDF ───────────────────────────────────────────────────────────────────────
-reportlab==4.2.2
+reportlab
 
 # ── Utilities ─────────────────────────────────────────────────────────────────
-python-dotenv==1.0.1
-numpy>=1.26.4
+python-dotenv
+numpy
